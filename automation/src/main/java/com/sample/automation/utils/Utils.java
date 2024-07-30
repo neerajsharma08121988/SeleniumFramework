@@ -53,4 +53,9 @@ public class Utils {
 		return RandomStringUtils.randomAlphabetic(10);
 	}
 
+	public void mouseHoverAndClick(WebElement hoverElement, WebElement targetElement) {
+		Actions action = new Actions(driver);
+		action.moveToElement(hoverElement).moveToElement(targetElement).click().perform();
+	}
+
 }

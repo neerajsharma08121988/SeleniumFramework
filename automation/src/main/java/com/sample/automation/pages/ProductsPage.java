@@ -40,9 +40,8 @@ public class ProductsPage extends BasePage {
 		utils = new Utils(driver);
 	}
 
-	public void selectproductAndClickonAddToCart() {
-		Actions action = new Actions(driver);
-		action.moveToElement(product).moveToElement(addToCart).click().perform();
+		public void selectproductAndClickonAddToCart() {
+		utils.mouseHoverAndClick(product, addToCart);
 	}
 
 	public void NavigateToCart() {

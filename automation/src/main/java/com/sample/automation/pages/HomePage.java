@@ -51,12 +51,9 @@ public class HomePage extends BasePage {
 	    }
 	    
 	            
-	    public void selectItemfromMenu() throws Throwable {
-
-	    	Actions action=new Actions(driver);
-	    	action.moveToElement(gearMenu).moveToElement(bags).click().perform();    	
-
-		}
+	   	public void selectItemfromMenu() throws Throwable {
+		utils.mouseHoverAndClick(gearMenu, bags);
+	}
 	    
 
 

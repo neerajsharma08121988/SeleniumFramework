@@ -49,7 +49,7 @@ public class UdemyTests extends BaseTest {
 		homePage.navigateToCreateAccountPage();
 		SignupPage signUpPage = new SignupPage(driver);
 
-		signUpPage.createAccount(RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphabetic(10), RandomStringUtils.randomAlphanumeric(10)+"@gmail.com", RandomStringUtils.randomAlphanumeric(10));
+		signUpPage.createAccount(utils.generateRandomString(), utils.generateRandomString(), utils.generateRandomString()+"@gmail.com", utils.generateRandomString()+"1aA@");
 		// Validate login
 		ExtentReportManager.getTest().info("Verifying success msg");
 		Assert.assertTrue(homePage.isSuccessmsgDisplayed().isDisplayed(),"Succes msg not displayed");
