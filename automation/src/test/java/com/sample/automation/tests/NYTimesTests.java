@@ -28,6 +28,7 @@ public class NYTimesTests extends BaseTest {
 
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
+		log("User logged in to the application");
 
 		Assert.assertTrue(homePage.isMyAccountPageDisplayed().isDisplayed(), "My Account not displayed");
 	}
@@ -38,6 +39,8 @@ public class NYTimesTests extends BaseTest {
 
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
+		log("User logged in to the application");
+		
 		homePage.navigatetoUsWheatherPage();
 
 		SubMenuPage subMenuPage = new SubMenuPage(driver);
@@ -55,12 +58,14 @@ public class NYTimesTests extends BaseTest {
 		String articleTitle = newsArticlePage.isArticleTitlePageDisplayed().getText();
 		newsArticlePage.clickOnSaveArticleButton();
 		newsArticlePage.navigatetoSavedArticleLink();
+		log("User navigated to the saved article page");
 
 		SavedArticlePage savedArticlePage = new SavedArticlePage(driver);
 
 		Assert.assertTrue(savedArticlePage.isSavedArticleTitleDisplayed().isDisplayed(), "saved article not displayed");
 		Assert.assertEquals(savedArticlePage.isSavedArticleTitleDisplayed().getText(), articleTitle,
 				"saved article title not matched");
+		log("Saved article verified successfully");
 		savedArticlePage.clickOnRemoveArticleButton();
 
 	}
@@ -70,6 +75,7 @@ public class NYTimesTests extends BaseTest {
 		HomePage homePage = new HomePage(driver);
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
+		log("User logged in to the application");
 
 		homePage.navigatetoNewsLetterPage();
 
@@ -79,6 +85,7 @@ public class NYTimesTests extends BaseTest {
 		Assert.assertTrue(newsLetterPage.isNewsLetterDisplayed().isDisplayed(), "New letter not displayed");
 		Assert.assertTrue(newsLetterPage.isNewsLetterRemoveButtonDisplayed().isDisplayed(),
 				"New letter remove button not displayed");
+		log("Verify Newsletter page");
 
 	}
 
@@ -89,6 +96,7 @@ public class NYTimesTests extends BaseTest {
 		loginPage.login(email, password);
 
 		homePage.verifyFooterLinks();
+		log("Verified Footer links");
 
 	}
 
