@@ -32,7 +32,7 @@ public class NYTimesTests extends BaseTest {
 		Assert.assertTrue(homePage.isMyAccountPageDisplayed().isDisplayed(), "My Account not displayed");
 	}
 
-	//@Test(dataProvider = "loginData")
+	@Test(dataProvider = "loginData")
 	public void testVerifySavedArticle(String email, String password) throws Throwable {
 		HomePage homePage = new HomePage(driver);
 
@@ -65,7 +65,7 @@ public class NYTimesTests extends BaseTest {
 
 	}
 
-	// @Test(dataProvider = "loginData")
+	 @Test(dataProvider = "loginData")
 	public void testVerifyNewsLetterPage(String email, String password) throws Throwable {
 		HomePage homePage = new HomePage(driver);
 		LoginPage loginPage = new LoginPage(driver);
