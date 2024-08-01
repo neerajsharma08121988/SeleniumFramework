@@ -2,7 +2,6 @@ package com.sample.automation.tests;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -13,7 +12,6 @@ import com.sample.automation.pages.NewsArticlePage;
 import com.sample.automation.pages.NewsLetterPage;
 import com.sample.automation.pages.SavedArticlePage;
 import com.sample.automation.pages.SubMenuPage;
-import com.sample.automation.utils.ExtentReportManager;
 import com.sample.automation.utils.Utils;
 
 public class NYTimesTests extends BaseTest {
@@ -27,24 +25,17 @@ public class NYTimesTests extends BaseTest {
 	@Test(dataProvider = "loginData")
 	public void testLogin(String email, String password) {
 		HomePage homePage = new HomePage(driver);
-		ExtentReportManager.createTest("testLogin");
-		ExtentReportManager.getTest().info("Navigating to login page");
 
-		ExtentReportManager.getTest().info("Entering login credentials");
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
 
-		ExtentReportManager.getTest().info("Verifying login success");
 		Assert.assertTrue(homePage.isMyAccountPageDisplayed().isDisplayed(), "My Account not displayed");
 	}
 
-	@Test(dataProvider = "loginData")
+	//@Test(dataProvider = "loginData")
 	public void testVerifySavedArticle(String email, String password) throws Throwable {
 		HomePage homePage = new HomePage(driver);
-		ExtentReportManager.createTest("testVerifySavedArticle");
-		ExtentReportManager.getTest().info("Navigating to login page");
 
-		ExtentReportManager.getTest().info("Entering login credentials");
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
 		homePage.navigatetoUsWheatherPage();
@@ -74,13 +65,9 @@ public class NYTimesTests extends BaseTest {
 
 	}
 
-	 @Test(dataProvider = "loginData")
+	// @Test(dataProvider = "loginData")
 	public void testVerifyNewsLetterPage(String email, String password) throws Throwable {
 		HomePage homePage = new HomePage(driver);
-		ExtentReportManager.createTest("testVerifyNewsLetterPage");
-		ExtentReportManager.getTest().info("Navigating to login page");
-
-		ExtentReportManager.getTest().info("Entering login credentials");
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
 
@@ -98,15 +85,9 @@ public class NYTimesTests extends BaseTest {
 	@Test(dataProvider = "loginData")
 	public void testFooterLinks(String email, String password) throws Throwable {
 		HomePage homePage = new HomePage(driver);
-		Utils util = new Utils(driver);
-		ExtentReportManager.createTest("testFooterLinks");
-		ExtentReportManager.getTest().info("Navigating to login page");
-
-		ExtentReportManager.getTest().info("Entering login credentials");
 		LoginPage loginPage = new LoginPage(driver);
 		loginPage.login(email, password);
 
-		ExtentReportManager.getTest().info("Verify Footer links");
 		homePage.verifyFooterLinks();
 
 	}

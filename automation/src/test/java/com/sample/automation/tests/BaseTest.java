@@ -1,33 +1,67 @@
 package com.sample.automation.tests;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.SearchContext;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Parameters;
-import org.testng.ITestResult;
 
-import com.sample.automation.utils.ExtentReportManager;
-import com.sample.automation.utils.Utils;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseTest {
 
 	protected WebDriver driver;
+	public static ExtentReports extent;
+	public ExtentTest logger;
+	
+	
+	@BeforeSuite
+	public void beforeEachTest() {
+		 getInstance();
+	}
+
+	
+	public ExtentReports getInstance() {
+		if (extent == null) {
+			extent = new ExtentReports(System.getProperty("user.dir") +"/target/ExtentReports/index.html", true);
+			extent.loadConfig(new File(System.getProperty("user.dir") + "//extent-config.xml"));
+		}
+		return extent;
+	}
+	
+	public void log(String data) {
+		Reporter.log(data);
+		logger.log(LogStatus.INFO, data);
+	}
+	
+	public void StartTesting(String TestName) {
+		ExtentReports rep = getInstance();
+		logger = rep.startTest(TestName);
+	}
+	
 
 	@BeforeMethod
 	@Parameters("browser")
-	public void setUp(String browser) {
-		ExtentReportManager.setupReport();
+	public void setUp(String browser, Method method) {
 		switch (browser.toLowerCase()) {
 		case "chrome":
 			WebDriverManager.chromedriver().setup();
@@ -50,28 +84,55 @@ public class BaseTest {
 		}
 		driver.manage().window().maximize();
 		driver.get("https://www.nytimes.com/international/");
+		StartTesting(method.getName());
 
 	}
-
+	
+	
 	@AfterMethod
-	public void tearDown(ITestResult result) {
-		if (driver != null) {
-			driver.quit();
-		}
-
-		// Log the test result
-		if (result.getStatus() == ITestResult.FAILURE) {
-			ExtentReportManager.getTest().fail(result.getThrowable());
-		} else if (result.getStatus() == ITestResult.SUCCESS) {
-			ExtentReportManager.getTest().pass("Test passed");
+	public void getResult(ITestResult result) throws IOException {
+		
+		
+		if (logger==null){
+			logger=extent.startTest("Starting Test");
+		}			 		
+		if (result.getStatus() == ITestResult.FAILURE) {		
+			logger.log(LogStatus.FAIL, "Test Case " + result.getName() + " is Failed");
+			String screenshot_path = getScreenShot(result.getName());
+			String image = logger.addScreenCapture(screenshot_path);
+			logger.log(LogStatus.FAIL, "Title verification", image);
+			logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getThrowable());
 		} else if (result.getStatus() == ITestResult.SKIP) {
-			ExtentReportManager.getTest().skip("Test skipped");
+			logger.log(LogStatus.SKIP, "Test Case " + result.getName() + " is Skipped");
+			String screenshot_path = getScreenShot(result.getName());
+			String image = logger.addScreenCapture(screenshot_path);
+			logger.log(LogStatus.SKIP, "Title verification", image);
+		} else if (result.getStatus() == ITestResult.SUCCESS) {
+			logger.log(LogStatus.PASS, "Test Case " + result.getName() + " is passed");
+			String screenshot_path = getScreenShot(result.getName());
+			String image = logger.addScreenCapture(screenshot_path);
+			logger.log(LogStatus.PASS, "Title verification", image);
 		}
-
+		extent.endTest(logger);
+		driver.quit();
 	}
+	
+	public String getScreenShot(String fileName) throws IOException {
+		String pathScreenShotsFolder = System.getProperty("user.dir");
 
-	@AfterSuite
-	public void afterSuite() {
-		ExtentReportManager.flushReport(); // Generate the report
+		try {
+			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			FileUtils.copyFile(scrFile, new File(pathScreenShotsFolder + "/target/ExtentReports/Screenshots/" + fileName + ".jpg"));
+			fileName = pathScreenShotsFolder + "/" + fileName + ".jpg";
+			return fileName;
+		} catch (Exception e) {
+		}
+		return fileName;
 	}
+	
+    @AfterTest
+    public void afterTest() {
+    	extent.flush();
+    	extent.close();
+    }
 }
